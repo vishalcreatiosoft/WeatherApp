@@ -1,11 +1,14 @@
 const request = require('request');
 const express = require('express');
 const path = require('path');
-const hbs = require('hbs')
-const searchData = require('./models/search_data')
-
+const hbs = require('hbs');
+const mongodb = require('mongodb');
+const MongoClient = mongodb.MongoClient;
 
 require('./database/connection');
+
+const connectionURL = 'mongodb://127.0.0.1:27017';
+const databaseName = 'Weather';
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -31,38 +34,75 @@ app.get('/home',(req, res)=>{
     res.render("home");
 })
 
-app.post('/search_data', async(req, res)=>{
+app.post('/home', async(req, res)=>{
     try{
         
         const location = req.body.cityName;
-        const url = `http://api.weatherstack.com/current?access_key=b85fd43d4d3a4047c747405c6cb25e2e&query=${location}`
+        const url = `http://api.weatherstack.com/current?access_key=5b8a3c041a96a0ee70ea4a9729fa883e&query=${location}`
 
         request({url: url},(error, response)=>{
             
             // storing whole json body into data variable
             const data = JSON.parse(response.body)
            
-          
-            
-            res.render("home",
-            {
+            const saveData = {
                 country : data.location.country,
                 city : data.location.name,
                 region : data.location.region,
                 observation_time : data.current.observation_time,
                 humidity : data.current.humidity
 
-            });
-      
+            }                  
+
+           
+            MongoClient.connect(connectionURL, {useNewUrlParser : true, useUnifiedTopology : true}, (error, client)=>{
+            if(error){
+                return console.log("unable to connect to database!");
+            }
+
+            const db = client.db(databaseName);
+            //console.log('connect');
+
+            db.collection('Data').insertOne(saveData);
+
+            })
+            
+            res.render("home", saveData);
+                   
+            
+            
         })
     }catch(error){
         res.status(400).send(error);
     }
 
+
 })
 
+
+app.post('/offlineSearch', async(req, res)=>{
+    const searchCity = req.body.cityInformation;
+
+    MongoClient.connect(connectionURL, {useNewUrlParser : true, useUnifiedTopology : true}, (error, client)=>{
+        if(error){
+            return console.log("unable to connect to database while fetching !");
+        }
+
+        const db = client.db(databaseName);
+        console.log('connected');
+        
+        let fetchedData = db.collection('Data').find({});
+        console.log(fetchedData);      
+    })
+
+    
+
+    res.render('offlineSearch')
+
+})
 
 
 app.listen(port,()=>{
     console.log(`server is running on port no ${port}`);
 })
+

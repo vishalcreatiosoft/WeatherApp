@@ -8,7 +8,7 @@ const searchCity = new mongoose.Schema({
     }
 })
 
-const searchData = new mongoose.model("Weather", searchCity);
+ //const searchData = new mongoose.model("Weather", searchCity);
 
-module.exports = searchData;
+ //module.exports = searchData;
 

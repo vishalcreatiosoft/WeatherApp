@@ -9,18 +9,31 @@
 </head>
 <body>
     <div class="row">
-        <div class="search_city"></div>
-        <div class="search_city">
+        <div class="left_section"></div>
+        <div class="middle_section">
             <h1>Welcome to Weather App</h1>
             
-            <form action="/search_data"  method="POST" class="search_form">
+            <form action="/home"  method="POST" class="search_form">
                 <input type="text" name="cityName" placeholder="Enter city name.." id="search_box"><br>
                 <button type="submit" value="Submit" class="search_button">Search</button>
 
             </form>
+
+            <h2 >For offline search click here</h2>
+
+
+            <form action="/offlineSearch"  method="POST" class="search_form">
+                <input type="text" name="cityInformation" placeholder="Enter city " id="search_box"><br>
+                <button type="submit" value="Submit" class="search_button">Offline Search</button>
+
+            </form>
         
         </div> 
-        <div class="search_city"></div>   
+        <div class="right_section">
+                
+                
+            
+        </div>   
 
     </div>
 

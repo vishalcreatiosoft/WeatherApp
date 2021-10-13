@@ -15,26 +15,30 @@ body
 .left_section{
     float: left;
     width: 33.33%;
-    text-align: center;
-    margin-top: 10%;
-}
-.middle_section{
-    float: left;
-    width: 33.33%;
-    text-align: center;
-    margin-top: 10%;
-    margin-left: 7%;
-}
-.right_section{
-    float: left;
-    width: 33.33%;
+    height: 100%;
     text-align: center;
     margin-top: 10%;
     
 }
+.middle_section{
+    float: left;
+    width: 33.33%;
+    height: 100%;
+    text-align: center;
+    margin-top: 5%;
+        
+}
+.right_section{
+    float: right;
+    width: 33.33%;
+    height: 100%;
+    text-align: center;
+    margin-top: 5%;
+       
+}
 
 .search_form{
-    margin-top: 10%;
+    margin-top: 5%;
 }
 
 .search_city{
@@ -63,3 +67,10 @@ body
     background-color: blue;
     color: white;
 }
+
+h2{
+    margin-top: 25%;
+    margin-bottom: 2%;
+    text-align: center;
+}
+
