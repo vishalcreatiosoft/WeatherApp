@@ -38,14 +38,22 @@ app.post('/search_data', async(req, res)=>{
         const url = `http://api.weatherstack.com/current?access_key=b85fd43d4d3a4047c747405c6cb25e2e&query=${location}`
 
         request({url: url},(error, response)=>{
-            const data = JSON.parse(response.body)
-            console.log(data)
             
-            //res.write(data);
-            res.render("home",{title : response.body});
+            // storing whole json body into data variable
+            const data = JSON.parse(response.body)
+           
+          
+            
+            res.render("home",
+            {
+                country : data.location.country,
+                city : data.location.name,
+                region : data.location.region,
+                observation_time : data.current.observation_time,
+                humidity : data.current.humidity
 
-
-
+            });
+      
         })
     }catch(error){
         res.status(400).send(error);
@@ -53,17 +61,6 @@ app.post('/search_data', async(req, res)=>{
 
 })
 
-
-
-
-// const location = 'Mumbai';
-
-// const url = `http://api.weatherstack.com/current?access_key=b85fd43d4d3a4047c747405c6cb25e2e&query=${location}`
-
-// request({url: url},(error, response)=>{
-//     const data = JSON.parse(response.body)
-//     console.log(data)
-// })
 
 
 app.listen(port,()=>{

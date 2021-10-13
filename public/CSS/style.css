@@ -1,12 +1,12 @@
 table,th,td
         {
-            border : 1px solid black;
-            padding : 3px ;
+            border : 2px solid black;
+            padding : 5px ;
         }
 
 body
 {
-    background-color: azure;
+    background-color: white;
 }
 .row{
     width: 100%;
@@ -23,6 +23,7 @@ body
     width: 33.33%;
     text-align: center;
     margin-top: 10%;
+    margin-left: 7%;
 }
 .right_section{
     float: left;
