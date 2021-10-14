@@ -97,7 +97,7 @@ app.post('/offlineSearch', async(req, res)=>{
                 console.log(err);
             }
 
-            console.log(resultData[0]);
+            console.log(resultData);
             res.render('offlineSearch',resultData);
             
         });
