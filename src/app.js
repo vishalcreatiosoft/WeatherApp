@@ -89,15 +89,25 @@ app.post('/offlineSearch', async(req, res)=>{
         }
 
         const db = client.db(databaseName);
-        console.log('connected');
+        //console.log('connected');
+        // console.log(searchCity);
         
-        let fetchedData = db.collection('Data').find({});
-        console.log(fetchedData);      
+        db.collection('Data').find({city : searchCity}).toArray((err,resultData)=>{
+            if(err){
+                console.log(err);
+            }
+
+            console.log(resultData[0]);
+            res.render('offlineSearch',resultData);
+            
+        });
+        
+              
     })
 
     
 
-    res.render('offlineSearch')
+    
 
 })
 
@@ -105,4 +115,5 @@ app.post('/offlineSearch', async(req, res)=>{
 app.listen(port,()=>{
     console.log(`server is running on port no ${port}`);
 })
+
 
