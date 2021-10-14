@@ -1,6 +1,7 @@
 const request = require('request');
 const express = require('express');
 const path = require('path');
+
 const hbs = require('hbs');
 const mongodb = require('mongodb');
 const MongoClient = mongodb.MongoClient;
@@ -18,7 +19,6 @@ const views_path = path.join(__dirname, "../templates/views");
 const partials_path = path.join(__dirname, "../templates/partials");
 app.set('views', views_path);
 hbs.registerPartials(partials_path);
-
 
 
 app.use(express.static(public_path));
@@ -96,12 +96,18 @@ app.post('/offlineSearch', async(req, res)=>{
             if(err){
                 console.log(err);
             }
-
-            console.log(resultData);
-            res.render('offlineSearch',resultData);
             
-        });
+                      
+           console.log(resultData);   
+           const obj = {title : resultData}
+           res.render("offlineSearch",obj);
+            
+        }); 
+
         
+               
+       
+        //res.render('offlineSearch')
               
     })
 
