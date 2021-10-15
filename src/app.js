@@ -50,6 +50,7 @@ app.post('/home', async(req, res)=>{
 
                 request({url: url},(error, response)=>{
                 
+
                     // storing whole json body into data variable
                     const data = JSON.parse(response.body)
                 
@@ -72,6 +73,11 @@ app.post('/home', async(req, res)=>{
                     db.collection('Data').insertOne(saveData);
                     })
                     res.render("home", saveData);
+
+
+                    if(error){
+                        res.status(404).send("404 Error Page not found");
+                    }
                         
                 })
 
