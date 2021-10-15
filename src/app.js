@@ -39,39 +39,54 @@ app.get('/home',(req, res)=>{
 app.post('/home', async(req, res)=>{
     try{
         
-        const location = req.body.cityName;
+        const checkConnection = async(rq, re)=>{
+            var result = await isOnline();
+            //console.log(result);
 
-        
-        
-        const url = `http://api.weatherstack.com/current?access_key=5b8a3c041a96a0ee70ea4a9729fa883e&query=${location}`
+            if(result){
+                const location = req.body.cityName;
 
-        request({url: url},(error, response)=>{
-        
-            // storing whole json body into data variable
-            const data = JSON.parse(response.body)
-           
-            const saveData = {
-                country : data.location.country,
-                city : data.location.name,
-                region : data.location.region,
-                observation_time : data.current.observation_time,
-                humidity : data.current.humidity
+                const url = `http://api.weatherstack.com/current?access_key=5b8a3c041a96a0ee70ea4a9729fa883e&query=${location}`
 
-            }              
+                request({url: url},(error, response)=>{
+                
+                    // storing whole json body into data variable
+                    const data = JSON.parse(response.body)
+                
+                    const saveData = {
+                        country : data.location.country,
+                        city : data.location.name,
+                        region : data.location.region,
+                        observation_time : data.current.observation_time,
+                        humidity : data.current.humidity
 
-            MongoClient.connect(connectionURL, {useNewUrlParser : true, useUnifiedTopology : true}, (error, client)=>{
-            if(error){
-                return console.log("unable to connect to database!");
+                    }              
+
+                    MongoClient.connect(connectionURL, {useNewUrlParser : true, useUnifiedTopology : true}, (error, client)=>{
+                    if(error){
+                        return console.log("unable to connect to database!");
+                    }
+
+                    const db = client.db(databaseName);
+                    //console.log('connect');
+                    db.collection('Data').insertOne(saveData);
+                    })
+                    res.render("home", saveData);
+                        
+                })
+
+            }
+            else{
+                res.status(400).send("No Internet Connection");
             }
 
-            const db = client.db(databaseName);
-            //console.log('connect');
-            db.collection('Data').insertOne(saveData);
-            })
-            res.render("home", saveData);
-                 
-        })
 
+        }
+        checkConnection();
+
+
+
+        
     }catch(error){
         res.status(400).send(error);
     }
@@ -97,7 +112,7 @@ app.post('/offlineSearch', async(req, res)=>{
             }
             
             const resultString = JSON.stringify(resultData)       
-            console.log(resultString);   
+           // console.log(resultString);   
             
             res.render("offlineSearch",{title : resultString});
             
