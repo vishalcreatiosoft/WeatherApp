@@ -1,9 +1,11 @@
 const request = require('request');
 const express = require('express');
 const path = require('path');
+const isOnline = require('is-online')
 
 const hbs = require('hbs');
 const mongodb = require('mongodb');
+
 const MongoClient = mongodb.MongoClient;
 
 require('./database/connection');
@@ -38,10 +40,13 @@ app.post('/home', async(req, res)=>{
     try{
         
         const location = req.body.cityName;
+
+        
+        
         const url = `http://api.weatherstack.com/current?access_key=5b8a3c041a96a0ee70ea4a9729fa883e&query=${location}`
 
         request({url: url},(error, response)=>{
-            
+        
             // storing whole json body into data variable
             const data = JSON.parse(response.body)
            
@@ -52,9 +57,8 @@ app.post('/home', async(req, res)=>{
                 observation_time : data.current.observation_time,
                 humidity : data.current.humidity
 
-            }                  
+            }              
 
-           
             MongoClient.connect(connectionURL, {useNewUrlParser : true, useUnifiedTopology : true}, (error, client)=>{
             if(error){
                 return console.log("unable to connect to database!");
@@ -62,16 +66,12 @@ app.post('/home', async(req, res)=>{
 
             const db = client.db(databaseName);
             //console.log('connect');
-
             db.collection('Data').insertOne(saveData);
-
             })
-            
             res.render("home", saveData);
-                   
-            
-            
+                 
         })
+
     }catch(error){
         res.status(400).send(error);
     }
@@ -90,30 +90,24 @@ app.post('/offlineSearch', async(req, res)=>{
 
         const db = client.db(databaseName);
         //console.log('connected');
-        // console.log(searchCity);
-        
+                
         db.collection('Data').find({city : searchCity}).toArray((err,resultData)=>{
             if(err){
                 console.log(err);
             }
             
-                      
-           console.log(resultData);   
-           const obj = {title : resultData}
-           res.render("offlineSearch",obj);
+            const resultString = JSON.stringify(resultData)       
+            console.log(resultString);   
+            
+            res.render("offlineSearch",{title : resultString});
             
         }); 
-
+     
         
-               
-       
-        //res.render('offlineSearch')
               
     })
 
-    
-
-    
+        
 
 })
 
